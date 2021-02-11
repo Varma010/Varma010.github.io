@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Caesar Cipher</title>
+<style type="text/css">
+	/* "auto" makes the left and right margins center the wrapper */
+#wrap { 
+	width: 900px; 
+	margin: 0 auto; 
+}
+
+.right{
+	position: absolute;
+	right : 0px;
+	width: 300px;
+	border: 3px solid #FFFF00
+}
+
+.aligncenter {
+    text-align: center;
+}
+.comment{
+	color: green;
+}
+
+</style>
+   </head>
+<body>
+<div id="wrap">
+ <article>
+ 	<h1 align="center" style="font-size:250%;"><i>Caesar Cipher in Cryptography</i></h1>
+ </br>
+ <p style="font-size:150%;">A Caesar Cipher is one of the most simple and easily cracked encryption methods.</p>
+ <p style="font-size:150%;">It is a Substitution Cipher that involves replacing each letter of the secret message with a different letter of the alphabet which is a fixed number of positions further in the alphabet.</p>
+<p style="font-size:150%;"> For example with a shift of 1, A would be replaced by B, B would become C, and so on. The method is apparently named after Julius Caesar, who apparently used it to communicate with his officials.  </p>
+<p style="font-size:150%;">Thus to cipher a given text we need an integer value, known as shift which indicates the number of position each letter of the text has been moved down.</p>
+</br>
+<p class="aligncenter">
+    <img src="caesarpng.png" alt="centered image" />
+</p>
+ </article>
+
+</div>
+</br>
+<div id="quizWrap" >
+	<div id="right">
+
+	<style type="text/css">
+		/* (A) WRAPPER */
+#quizWrap {
+  max-width: 600px;
+  margin: 0 auto;
+  float: right;
+  padding: 20px;
+}
+
+/* (B) QUESTION */
+#quizQn {
+  padding: 20px;
+  background: #7BECEC;
+  color: #fff;
+  font-size: 24px;
+  border-radius: 10px;
+}
+
+/* (C) ANSWERS */
+#quizAns {
+  margin: 10px 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 10px;
+}
+#quizAns input[type=radio] { display: none; }
+#quizAns label {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  text-align: center;
+}
+#quizAns label.correct {
+  background: #0DEF42;
+  border: 1px solid #60a03f;
+}
+#quizAns label.wrong {
+  background: #FF0000;
+  border: 1px solid #c78181;
+}
+
+/* (D) BODY... DOES NOT QUITE MATTER */
+html, body {
+  background: #ffffff; 
+  font-family: arial, sans-serif;
+}
+	</style>
+	<script type="">
+		var quiz = {
+  // (A) PROPERTIES 
+  // (A1) QUESTIONS & ANSWERS
+  // Q = QUESTION, O = OPTIONS, A = CORRECT ANSWER
+  data: [
+  {
+    q : "What is the standard distance between the target and archer in Olympics?",
+    o : [
+      "50 meters",
+      "70 meters",
+      "100 meters",
+      "120 meters"
+    ],
+    a : 1 // arrays start with 0, so answer is 70 meters
+  },
+  {
+    q : "Which is the highest number on a standard roulette wheel?",
+    o : [
+      "22",
+      "24",
+      "32",
+      "36"
+    ],
+    a : 3
+  },
+  {
+    q : "How much wood could a woodchuck chuck if a woodchuck would chuck wood?",
+    o : [
+      "400 pounds",
+      "550 pounds",
+      "700 pounds",
+      "750 pounds"
+    ],
+    a : 2
+  },
+  {
+    q : "Which is the seventh planet from the sun?",
+    o : [
+      "Uranus",
+      "Earth",
+      "Pluto",
+      "Mars"
+    ],
+    a : 0
+  },
+  {
+    q : "Which is the largest ocean on Earth?",
+    o : [
+      "Atlantic Ocean",
+      "Indian Ocean",
+      "Arctic Ocean",
+      "Pacific Ocean"
+    ],
+    a : 3
+  }
+  ],
+
+  // (A2) HTML ELEMENTS
+  hWrap: null, // HTML quiz container
+  hQn: null, // HTML question wrapper
+  hAns: null, // HTML answers wrapper
+
+  // (A3) GAME FLAGS
+  now: 0, // current question
+  score: 0, // current score
+
+  // (B) INIT QUIZ HTML
+  init: function(){
+    // (B1) WRAPPER
+    quiz.hWrap = document.getElementById("quizWrap");
+
+    // (B2) QUESTIONS SECTION
+    quiz.hQn = document.createElement("div");
+    quiz.hQn.id = "quizQn";
+    quiz.hWrap.appendChild(quiz.hQn);
+
+    // (B3) ANSWERS SECTION
+    quiz.hAns = document.createElement("div");
+    quiz.hAns.id = "quizAns";
+    quiz.hWrap.appendChild(quiz.hAns);
+
+    // (B4) GO!
+    quiz.draw();
+  },
+
+  // (C) DRAW QUESTION
+  draw: function(){
+    // (C1) QUESTION
+    quiz.hQn.innerHTML = quiz.data[quiz.now].q;
+
+    // (C2) OPTIONS
+    quiz.hAns.innerHTML = "";
+    for (let i in quiz.data[quiz.now].o) {
+      let radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = "quiz";
+      radio.id = "quizo" + i;
+      quiz.hAns.appendChild(radio);
+      let label = document.createElement("label");
+      label.innerHTML = quiz.data[quiz.now].o[i];
+      label.setAttribute("for", "quizo" + i);
+      label.dataset.idx = i;
+      label.addEventListener("click", quiz.select);
+      quiz.hAns.appendChild(label);
+    }
+  },
+  
+  // (D) OPTION SELECTED
+  select: function(){
+    // (D1) DETACH ALL ONCLICK
+    let all = quiz.hAns.getElementsByTagName("label");
+    for (let label of all) {
+      label.removeEventListener("click", quiz.select);
+    }
+
+    // (D2) CHECK IF CORRECT
+    let correct = this.dataset.idx == quiz.data[quiz.now].a;
+    if (correct) { 
+      quiz.score++; 
+      this.classList.add("correct");
+    } else {
+      this.classList.add("wrong");
+    }
+  
+    // (D3) NEXT QUESTION OR END GAME
+    quiz.now++;
+    setTimeout(function(){
+      if (quiz.now < quiz.data.length) { quiz.draw(); } 
+      else {
+        quiz.hQn.innerHTML = `You have answered ${quiz.score} of ${quiz.data.length} correctly.`;
+        quiz.hAns.innerHTML = "";
+      }
+    }, 1000);
+  }
+};
+window.addEventListener("load", quiz.init);
+	</script>
+</div>
+
+</div>
+
+
+
+
+
+<div id="wrap">
+	 <article>
+ 	<pre><strong>Text</strong> : ABCDEFGHIJKLMNOPQRSTUVWXYZ
+<strong>Shift</strong>: 23
+<strong>Cipher</strong>: XYZABCDEFGHIJKLMNOPQRSTUVW
+
+<strong>Text</strong> : ATTACKATONCE
+<strong>Shift</strong>: 4
+<strong>Cipher</strong>: EXXEGOEXSRGI
+</pre>
+ </article>
+ <br>
+ <br>
+ <article>
+ 	<p style="font-size:150%;"><strong>Algorithm for Caesar Cipher:</strong><br><br>
+<strong>Input:</strong></p>
+<ol>
+<li style="font-size:150%;">A String of lower case letters, called Text.</li>
+<li style="font-size:150%;">An Integer between 0-25 denoting the required shift.</li>
+</ol>
+<p style="font-size:150%;"><strong>Procedure:</strong></p>
+<ul>
+<li style="font-size:150%;">Traverse the given text one character at a time .</li>
+<li  style="font-size:150%;">For each character, transform the given character as per the rule, depending on whether we’re encrypting or decrypting the text.</li>
+<li  style="font-size:150%;">Return the new string generated.</li>
+</ul>
+</br>
+ </article>
+ <table xmlns="http://www.w3.org/1999/xhtml" class="noborder">
+  <tbody>
+    <tr>
+      <td><label for="text">Text:</label></td>
+      <td><textarea id="text" cols="50" rows="10" style="width:40em; height:15em;color:red">ENTER THE CODE OR TEXT TO USE CAESAR CIPHER</textarea></td>
+    </tr>
+    <tr>
+      <td><label for="shift">Shift:</label></td>
+      <td><input type="number" id="shift" min="0" max="25" step="1" value="13" autocomplete="off" style="width:3em" /></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <button onclick="app.doCrypt(false);">Encrypt</button>
+        <button onclick="app.doCrypt(true);">Decrypt</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<script xmlns="http://www.w3.org/1999/xhtml" src="caesar-cipher.js"></script>
+</br>
+</br>
+<p style="font-size:150%;"><strong>How to decrypt?</strong><br><br>
+We can either write another function decrypt similar to encrypt, that’ll apply the given shift in the opposite direction to decrypt the original text.&nbsp;However we can use the cyclic property of the cipher under modulo , hence we can simply observe</p>
+<pre style="font-size:150%;">Cipher(n) = De-cipher(26-n)</pre>
+<p style="font-size:150%;">Hence, we can use the same function to decrypt, instead we’ll modify the shift value such that&nbsp;shift = 26-shift</p>
+<br>
+<br>
+<p style="font-size:150%;"><strong>Caesar Cipher implementation in python</strong></p>
+<p class="comment" style="font-size:150%;" >#A python program to illustrate Caesar Cipher Technique </p>
+<p class="aligncenter">
+    <img src="caesarpython.png" alt="centered image" />
+</p>
+<br>
+<p style="font-size:150%;"><strong>Caesar Cipher implementation in C language</strong></p>
+<p class="comment" style="font-size:150%;" >#C program to illustrate Caesar Cipher Technique </p>
+<p class="aligncenter">
+    <img src="caesarc.png" alt="centered image" />
+</p>
+<br>
+<p style="font-size:150%;"><strong>Caesar Cipher implementation in Javascript</strong></p>
+<p class="comment" style="font-size:150%;" >#A Javascript program to illustrate Caesar Cipher Technique </p>
+<p class="aligncenter">
+    <img src="caesarjavascript.png" alt="centered image" />
+</p>
+<br>
+</div>
+</body>
+</html>
